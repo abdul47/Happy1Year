@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Polaroid Gallery</title>
+  <meta name="description" content="A personal polaroid photo gallery with scroll animations and beautiful transitions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HERO / BACKGROUND SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-overlay" id="heroOverlay"></div>
+    <div class="hero-text" id="heroText">
+      <h1>HAPPY 1 YEAR<br><span style="font-size:0.65em;letter-spacing:0.12em;">ANNIVERSARY</span> 🥂</h1>
+      <p>Scroll to relive them</p>
+      <div class="scroll-indicator">
+        <span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== POLAROID CLUSTER SECTION ===== -->
+  <section class="polaroid-section" id="polaroidSection">
+    <div class="cluster-container" id="clusterContainer">
+      <!-- Polaroids injected by JS -->
+    </div>
+  </section>
+
+  <!-- ===== LIGHTBOX OVERLAY ===== -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <div class="lightbox-polaroid" id="lightboxPolaroid">
+        <div class="lp-photo-wrap">
+          <img src="" alt="Memory" id="lightboxImg" />
+        </div>
+        <div class="lp-caption" id="lightboxCaption"></div>
+        <div class="lp-heart">♡</div>
+      </div>
+      <div class="lightbox-message" id="lightboxMessage">
+        <p id="lightboxText"></p>
+      </div>
+    </div>
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

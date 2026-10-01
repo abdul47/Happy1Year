@@ -1,0 +1,458 @@
+/* =============================================
+   ROOT & RESET
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #f5f0e8;
+  --warm-white: #fdfaf5;
+  --shadow-soft: 0 8px 32px rgba(0,0,0,0.18);
+  --shadow-hover: 0 20px 60px rgba(0,0,0,0.35);
+  --font-hand: 'Caveat', cursive;
+  --font-body: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #111;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Fixed background layer — lives behind EVERYTHING */
+.fixed-bg {
+  position: fixed;
+  inset: -10%;
+  background: url('bg.jpg') center 40% / cover no-repeat;
+  transform-origin: 50% 45%;
+  z-index: 0;
+  will-change: transform, filter;
+}
+
+/* =============================================
+   HERO SECTION
+   ============================================= */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  /* transparent — shows the fixed-bg layer underneath */
+  background: transparent;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.3) 60%,
+    rgba(0,0,0,0.75) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.1s;
+  z-index: 1;
+}
+
+/* ---- hero text ---- */
+.hero-text {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.hero-text h1 {
+  font-family: var(--font-hand);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s 0.6s forwards;
+}
+
+.hero-text p {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+  opacity: 0;
+  animation: fadeUp 1s 1s forwards;
+}
+
+/* scroll indicator */
+.scroll-indicator {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 1s 1.4s forwards;
+}
+.scroll-indicator span {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-right: 2px solid rgba(255,255,255,0.7);
+  border-bottom: 2px solid rgba(255,255,255,0.7);
+  transform: rotate(45deg);
+  animation: bounce 1.6s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50%       { transform: rotate(45deg) translateY(8px); }
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   POLAROID CLUSTER SECTION
+   ============================================= */
+.polaroid-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  /* transparent so fixed blurred bg shows through */
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  padding: 10px;
+}
+
+/* Soft dark scrim so white polaroids pop against the photo */
+.polaroid-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 0;
+}
+
+.cluster-container {
+  position: relative;
+  width: min(1350px, 96vw);
+  height: min(88vh, 850px);
+  z-index: 1;
+}
+
+/* =============================================
+   INDIVIDUAL POLAROID CARD
+   ============================================= */
+.polaroid-card {
+  position: absolute;
+  width: clamp(120px, 15.5vw, 210px);
+  background: var(--cream);
+  border-radius: 2px;
+  padding: 6px 6px 30px 6px;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  user-select: none;
+  transform-origin: center center;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.3s ease,
+    z-index 0s;
+  will-change: transform;
+  /* entrance animation via JS delay */
+  opacity: 0;
+}
+
+.polaroid-card:hover {
+  box-shadow: var(--shadow-hover);
+  z-index: 50 !important;
+}
+
+.polaroid-card .photo-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #ddd;
+  position: relative;
+}
+
+.polaroid-card .photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: sepia(0.12) saturate(1.1);
+  transition: transform 0.4s ease;
+}
+
+.polaroid-card:hover .photo-wrap img {
+  transform: scale(1.06);
+}
+
+/* heart stamp */
+.polaroid-card .p-heart {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 1.2rem;
+  color: #333;
+  font-family: var(--font-hand);
+  line-height: 1;
+}
+
+/* tape removed */
+
+/* placeholder when no image */
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8e0d5 0%, #d5ccc0 100%);
+  color: #999;
+  font-size: 0.7rem;
+  font-family: var(--font-hand);
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 8px;
+}
+
+/* =============================================
+   POLAROID ENTRANCE ANIMATION
+   ============================================= */
+@keyframes popIn {
+  0%   { opacity: 0; transform: var(--base-transform) scale(0.6); }
+  70%  { opacity: 1; transform: var(--base-transform) scale(1.05); }
+  100% { opacity: 1; transform: var(--base-transform) scale(1); }
+}
+
+/* =============================================
+   LIGHTBOX
+   ============================================= */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 8, 6, 0);
+  pointer-events: none;
+  transition: background 0.5s ease;
+}
+
+.lightbox.active {
+  background: rgba(10, 8, 6, 0.88);
+  pointer-events: all;
+  backdrop-filter: blur(12px);
+}
+
+.lightbox-inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  opacity: 0;
+  transform: scale(0.5) translateY(80px);
+  transition: opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lightbox.active .lightbox-inner {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* The focused polaroid */
+.lightbox-polaroid {
+  position: relative;
+  width: clamp(220px, 38vw, 380px);
+  background: var(--cream);
+  border-radius: 2px;
+  padding: 14px 14px 60px 14px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.lp-photo-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #ccc;
+}
+
+.lp-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.1) saturate(1.15);
+}
+
+.lp-caption {
+  position: absolute;
+  bottom: 14px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  color: #555;
+  padding: 0 10px;
+}
+
+.lp-heart {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+/* Message card on the right */
+.lightbox-message {
+  max-width: clamp(180px, 30vw, 300px);
+  flex-shrink: 0;
+}
+
+.lightbox-message p {
+  font-family: var(--font-hand);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  color: var(--warm-white);
+  line-height: 1.6;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.5s 0.3s ease, transform 0.5s 0.3s ease;
+}
+
+.lightbox.active .lightbox-message p {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* close button */
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  opacity: 0;
+  transition: opacity 0.3s 0.2s;
+}
+
+.lightbox.active .lightbox-close {
+  opacity: 1;
+}
+
+.lightbox-close:hover {
+  background: rgba(255,255,255,0.22);
+  transform: scale(1.1) rotate(90deg);
+}
+
+/* =============================================
+   STICKER SHOWER & CLICKABLE BUTTON
+   ============================================= */
+.sticker-photo-btn {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.lightbox.active .sticker-photo-btn {
+  opacity: 1;
+  pointer-events: all;
+  animation: floatPulse 2.5s infinite ease-in-out;
+}
+
+.sticker-photo-btn:hover {
+  transform: translateX(-50%) scale(1.22) rotate(6deg);
+  filter: drop-shadow(0 10px 24px rgba(255, 255, 255, 0.4));
+}
+
+@keyframes floatPulse {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* Floating stickers container & animation */
+.floating-sticker {
+  position: fixed;
+  bottom: -90px;
+  z-index: 9999;
+  pointer-events: none;
+  object-fit: contain;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+  animation: floatUpSticker var(--duration, 3.2s) cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes floatUpSticker {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0) rotate(var(--start-rot)) scale(0.4);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(-12vh) translateX(calc(var(--drift) * 0.2)) rotate(calc(var(--start-rot) + 12deg)) scale(1.05);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--end-rot)) scale(0.85);
+  }
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+  .cluster-container {
+    width: 98vw;
+    height: 85vh;
+  }
+  .polaroid-card {
+    width: clamp(85px, 24vw, 130px);
+    padding: 4px 4px 22px 4px;
+  }
+  .polaroid-card .p-heart {
+    bottom: 4px;
+    right: 8px;
+    font-size: 0.9rem;
+  }
+  .lightbox-inner { flex-direction: column; gap: 1.2rem; }
+  .lightbox-message { max-width: 90vw; text-align: center; }
+  .lightbox-message p { transform: translateY(20px); }
+  .lightbox.active .lightbox-message p { transform: translateY(0); }
+}
